@@ -19,3 +19,7 @@ release/
 *.tgz
 *.tar.gz
 *.zip
+
+.agent/
+.agents/
+
