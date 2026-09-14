@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plugin } from '@nocobase/client-v2';
+import { Plugin } from '@nocobase/client';
 import { customIconsManager } from './services/custom-icons-manager';
 import { EnhancedIconPicker } from './components/EnhancedIconPicker';
 import { CustomIconsSettingsPage } from './pages/CustomIconsSettingsPage';
@@ -107,7 +107,19 @@ export class PluginCustomIconsClientV2 extends Plugin {
     // 3. 在系统设置中挂载“自定义图标库”管理入口
     const manager = this.app.pluginSettingsManager as any;
     if (manager) {
-      const title = this.app?.i18n?.t ? this.app.i18n.t('Custom Icons') : '自定义图标库';
+      let title = '自定义图标库';
+      try {
+        const i18n = this.app?.i18n;
+        const res = i18n?.t ? i18n.t('Custom Icons', { ns: ['@nocobase/plugin-custom-icons', 'client'] }) : null;
+        if (res && res !== 'Custom Icons') {
+          title = res;
+        } else {
+          const lang = (i18n?.language || (typeof window !== 'undefined' ? localStorage.getItem('NOCOBASE_LOCALE') : '') || '').toLowerCase();
+          title = (!lang || lang.startsWith('zh')) ? '自定义图标库' : (res || 'Custom Icons');
+        }
+      } catch (e) {
+        title = '自定义图标库';
+      }
       const icon = 'AppstoreAddOutlined';
       const menuKey = 'custom-icons';
       const pageName = `${menuKey}.index`;

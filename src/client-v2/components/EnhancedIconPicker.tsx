@@ -8,9 +8,37 @@ import {
   FontSizeOutlined,
   UndoOutlined,
 } from '@ant-design/icons';
-import { useFormLayout } from '@formily/antd-v5';
-import { connect, mapProps, mapReadPretty } from '@formily/react';
-import { isValid } from '@formily/shared';
+function getFormilyBindings() {
+  let fr: any = null;
+  let fs: any = null;
+  let antdV5: any = null;
+  if (typeof window !== 'undefined') {
+    const w = window as any;
+    fr =
+      w.__nocobase_app_dev_deps__?.['@formily/react'] ||
+      w.requirejs?.requirejs?.s?.contexts?._?.defined?.['@formily/react'] ||
+      w.requirejs?.s?.contexts?._?.defined?.['@formily/react'];
+    fs =
+      w.__nocobase_app_dev_deps__?.['@formily/shared'] ||
+      w.requirejs?.requirejs?.s?.contexts?._?.defined?.['@formily/shared'] ||
+      w.requirejs?.s?.contexts?._?.defined?.['@formily/shared'];
+    antdV5 =
+      w.__nocobase_app_dev_deps__?.['@formily/antd-v5'] ||
+      w.requirejs?.requirejs?.s?.contexts?._?.defined?.['@formily/antd-v5'] ||
+      w.requirejs?.s?.contexts?._?.defined?.['@formily/antd-v5'];
+  }
+  return { fr, fs, antdV5 };
+}
+
+function safeUseFormLayout(): any {
+  const { antdV5 } = getFormilyBindings();
+  if (typeof antdV5?.useFormLayout === 'function') {
+    try {
+      return antdV5.useFormLayout();
+    } catch (e) {}
+  }
+  return {};
+}
 import {
   Button,
   Empty,
@@ -28,13 +56,16 @@ import {
 } from 'antd';
 import { debounce, groupBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { hasIcon, Icon, icons } from '@nocobase/client-v2';
 import {
   customIconsManager,
   CustomIconItem,
   SubCategoryDef,
   RawSubCategoryConfig,
   parseSubCategoryRules,
+  safeHasIcon as hasIcon,
+  SafeIcon as Icon,
+  getSafeIconsMap,
+  antdIconsDict,
 } from '../services/custom-icons-manager';
 import { CustomIconModal } from './CustomIconModal';
 import {
@@ -133,7 +164,7 @@ export const UNIVERSAL_ICONIFY_SUB_CATEGORIES: SubCategoryDef[] = customIconsMan
 
 function EnhancedIconField(props: IconPickerProps) {
   const { fontSizeXL } = theme.useToken().token;
-  const layout = useFormLayout();
+  const layout = safeUseFormLayout();
   const {
     value,
     onChange,
@@ -202,15 +233,27 @@ function EnhancedIconField(props: IconPickerProps) {
     return unsub;
   }, []);
 
-  // 内置 Antd 图标列表
+  // 内置 Antd 图标列表（安全防空回退）
   const builtInIcons = useMemo(() => {
-    return [...icons.keys()].filter((name) => {
+    const iconsMap = getSafeIconsMap();
+    if (iconsMap && typeof iconsMap.keys === 'function') {
+      const keys = [...iconsMap.keys()].filter((name) => {
+        return (
+          typeof name === 'string' &&
+          !name.includes('?') &&
+          (name.endsWith('outlined') || name.endsWith('filled') || name.endsWith('twotone'))
+        );
+      });
+      if (keys.length > 0) return keys;
+    }
+    return Array.from(antdIconsDict.keys()).filter((name) => {
       return (
+        typeof name === 'string' &&
         !name.includes('?') &&
         (name.endsWith('outlined') || name.endsWith('filled') || name.endsWith('twotone'))
       );
     });
-  }, []);
+  }, [tick]);
 
   const groupIconData = useMemo(() => groupByIconName(builtInIcons), [builtInIcons]);
 
@@ -1007,29 +1050,52 @@ function EnhancedIconField(props: IconPickerProps) {
   );
 }
 
-export const EnhancedIconPicker = connect(
-  EnhancedIconField,
-  mapProps((props: IconPickerProps, field) => {
-    return {
-      ...props,
-      suffix: (
-        <span>{field?.['loading'] || field?.['validating'] ? <LoadingOutlined /> : props.suffix}</span>
-      ),
-    };
-  }),
-  mapReadPretty((props: IconPickerReadPrettyProps) => {
-    if (!isValid(props.value)) {
-      return <div></div>;
+let CachedConnectedPicker: any = null;
+
+export const EnhancedIconPicker: React.FC<any> = (props: any) => {
+  if (!CachedConnectedPicker) {
+    const { fr, fs } = getFormilyBindings();
+    const conn = fr?.connect;
+    const mp = fr?.mapProps;
+    const mrp = fr?.mapReadPretty;
+    const isVal = fs?.isValid || ((val: any) => val !== null && val !== undefined && val !== '');
+
+    if (typeof conn === 'function') {
+      try {
+        CachedConnectedPicker = conn(
+          EnhancedIconField,
+          typeof mp === 'function'
+            ? mp((p: any, field: any) => ({
+                ...p,
+                suffix: (
+                  <span>{field?.['loading'] || field?.['validating'] ? <LoadingOutlined /> : p?.suffix}</span>
+                ),
+              }))
+            : undefined,
+          typeof mrp === 'function'
+            ? mrp((readProps: any) => {
+                if (!isVal(readProps?.value)) {
+                  return <div></div>;
+                }
+                const { name, color, size } = parseIconValue(readProps?.value);
+                return (
+                  <RenderPreviewIcon
+                    name={name || readProps?.value || ''}
+                    color={color}
+                    size={size}
+                  />
+                );
+              })
+            : undefined,
+        );
+      } catch (e) {
+        CachedConnectedPicker = EnhancedIconField;
+      }
+    } else {
+      CachedConnectedPicker = EnhancedIconField;
     }
-    const { name, color, size } = parseIconValue(props.value);
-    return (
-      <RenderPreviewIcon
-        name={name || props.value || ''}
-        color={color}
-        size={size}
-      />
-    );
-  }),
-);
+  }
+  return React.createElement(CachedConnectedPicker, props);
+};
 
 export default EnhancedIconPicker;

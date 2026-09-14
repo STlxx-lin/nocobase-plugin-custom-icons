@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Space, Table, Typography, Tag, Popconfirm, message, Input, Select, Tabs, Switch, InputNumber, Alert, Divider } from 'antd';
+import { Card, Button, Space, Table, Typography, Tag, Popconfirm, message, Input, Select, Tabs, Switch, InputNumber, Alert, Divider, theme } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -30,6 +30,7 @@ import { SubCategoriesSettingsPanel } from '../components/SubCategoriesSettingsP
 const { Title, Text } = Typography;
 
 export const CustomIconsSettingsPage: React.FC<{ api: any }> = ({ api }) => {
+  const { token } = theme.useToken();
   const [activeTab, setActiveTab] = useState('installed');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIcon, setEditingIcon] = useState<CustomIconItem | null>(null);
@@ -468,14 +469,14 @@ export const CustomIconsSettingsPage: React.FC<{ api: any }> = ({ api }) => {
                   <Card
                     size="small"
                     title={
-                      <span style={{ fontSize: 13, color: '#595959' }}>
+                      <span style={{ fontSize: 13, color: token.colorTextSecondary }}>
                         💡 现场实时演练与效果验证（无需离开本页即可体验）
                       </span>
                     }
-                    style={{ backgroundColor: '#fafafa' }}
+                    style={{ backgroundColor: token.colorFillAlter, border: `1px solid ${token.colorBorderSecondary}` }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '8px 4px' }}>
-                      <span style={{ fontSize: 13, color: '#595959' }}>点击右侧测试选择器：</span>
+                      <span style={{ fontSize: 13, color: token.colorTextSecondary }}>点击右侧测试选择器：</span>
                       <EnhancedIconPicker apiClient={api} />
                       <Text type="secondary" style={{ fontSize: 12 }}>
                         （在上方修改弹窗宽度、阈值或每页条数并保存后，直接点击此处打开，即可现场检验弹窗宽度与分页效果）

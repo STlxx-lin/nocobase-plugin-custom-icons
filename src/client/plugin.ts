@@ -4,7 +4,7 @@ import { customIconsManager } from '../client-v2/services/custom-icons-manager';
 import { EnhancedIconPicker } from '../client-v2/components/EnhancedIconPicker';
 import { CustomIconsSettingsPage } from '../client-v2/pages/CustomIconsSettingsPage';
 
-export class PluginCustomIconsClientV2 extends Plugin {
+export class PluginCustomIconsClient extends Plugin {
   async load() {
     // 1. 设置主应用实例与 API Client 并启动多阶段宿主图标探测与保活
     customIconsManager.setApp(this.app);
@@ -167,6 +167,6 @@ export class PluginCustomIconsClientV2 extends Plugin {
   }
 }
 
-export default PluginCustomIconsClientV2;
+export default PluginCustomIconsClient;
 
-export const PluginCustomIconsClient = PluginCustomIconsClientV2;
+// touch 1789146833950

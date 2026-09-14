@@ -51,11 +51,8 @@ export interface SubCategoriesSettingsPanelProps {
   categories: string[];
 }
 
-export const SubCategoriesSettingsPanel: React.FC<SubCategoriesSettingsPanelProps> = ({
-  api,
-  icons,
-  categories,
-}) => {
+export const SubCategoriesSettingsPanel: React.FC<SubCategoriesSettingsPanelProps> = (props) => {
+  const { api, icons = [], categories = [] } = props || {};
   const [config, setConfig] = useState<Record<string, RawSubCategoryConfig[]>>(
     customIconsManager.getSubCategoriesConfig(),
   );

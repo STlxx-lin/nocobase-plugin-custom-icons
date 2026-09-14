@@ -1,9 +1,42 @@
 import React from 'react';
 import * as AntdIcons from '@ant-design/icons';
-import { registerIcon, icons } from '@nocobase/client-v2';
 import { createSvgIconComponent, sanitizeAndFormatSvg } from '../utils/svg-helper';
 import { parseIconValue } from '../utils/icon-style-helper';
 import subCategoriesPreset from '../config/sub-categories.json';
+
+// 安全获取宿主环境的 registerIcon 与 icons Map（支持 client 与 client-v2 双架构，杜绝 external 未注入时抛出 TypeError: Cannot read properties of undefined (reading 'icons')）
+export function getRuntimeIconRegistry(): { registerIcon?: (name: string, comp: any) => void; icons?: any } {
+  if (typeof window !== 'undefined') {
+    const deps = (window as any).__nocobase_app_dev_deps__;
+    if (deps?.['@nocobase/client-v2']?.icons || deps?.['@nocobase/client-v2']?.registerIcon) {
+      return {
+        registerIcon: deps['@nocobase/client-v2'].registerIcon,
+        icons: deps['@nocobase/client-v2'].icons,
+      };
+    }
+    if (deps?.['@nocobase/client']?.icons || deps?.['@nocobase/client']?.registerIcon) {
+      return {
+        registerIcon: deps['@nocobase/client'].registerIcon,
+        icons: deps['@nocobase/client'].icons,
+      };
+    }
+  }
+  return {};
+}
+
+export function safeRegisterIcon(name: string, comp: any) {
+  const { registerIcon } = getRuntimeIconRegistry();
+  if (typeof registerIcon === 'function') {
+    try {
+      registerIcon(name, comp);
+    } catch (e) {}
+  }
+}
+
+export function getSafeIconsMap(): any {
+  const { icons } = getRuntimeIconRegistry();
+  return icons;
+}
 
 export interface CustomIconItem {
   id?: number | string;
@@ -160,10 +193,13 @@ export function patchIconsMap(targetMap: any, manager?: any) {
   return targetMap;
 }
 
-// 模块加载瞬间立即拦截当前作用域的 icons Map
-if (icons) {
-  patchIconsMap(icons);
-}
+// 模块加载瞬间尝试拦截当前作用域的 icons Map（安全容错）
+try {
+  const map = getSafeIconsMap();
+  if (map && typeof map.has === 'function') {
+    patchIconsMap(map);
+  }
+} catch (e) {}
 
 export const PRESET_COMMON_ICONS: CustomIconItem[] = [
   {
@@ -242,10 +278,25 @@ class CustomIconsManager {
   private subCategoriesConfig: Record<string, RawSubCategoryConfig[]> = (subCategoriesPreset as any) || {};
 
   private constructor() {
-    // 1. 立即挂载本地 icons Map 的代理拦截器
-    if (icons) {
-      patchIconsMap(icons, this);
-    }
+    // 绑定核心实例方法，防止解构或作为回调传递时丢失 this
+    this.getAllIcons = this.getAllIcons.bind(this);
+    this.getCategories = this.getCategories.bind(this);
+    this.getIcon = this.getIcon.bind(this);
+    this.getPaginationConfig = this.getPaginationConfig.bind(this);
+    this.getSubCategoriesConfig = this.getSubCategoriesConfig.bind(this);
+    this.getSubCategories = this.getSubCategories.bind(this);
+    this.deleteIcon = this.deleteIcon.bind(this);
+    this.loadIcons = this.loadIcons.bind(this);
+    this.saveIcon = this.saveIcon.bind(this);
+    this.updateIcon = this.updateIcon.bind(this);
+
+    // 1. 挂载当前环境的 icons Map 代理拦截器
+    try {
+      const map = getSafeIconsMap();
+      if (map && typeof map.has === 'function') {
+        patchIconsMap(map, this);
+      }
+    } catch (e) {}
 
     // 2. 初始化时同步注册内置预设图标，确保首屏零延迟
     this.registerPresetIcons();
@@ -868,10 +919,10 @@ class CustomIconsManager {
     this.registeredComponents.set(strName, Comp);
     this.registeredComponents.set(lowerName, Comp);
 
-    // 3. 注册到当前 client-v2 作用域
-    registerIcon(lowerName, Comp);
+    // 3. 注册到当前 client 作用域（安全容错）
+    safeRegisterIcon(lowerName, Comp);
     if (lowerName !== strName) {
-      registerIcon(strName, Comp);
+      safeRegisterIcon(strName, Comp);
     }
 
     // 4. 同步注册到主应用宿主 Icon 闭包
@@ -893,7 +944,8 @@ class CustomIconsManager {
   public getIcon(name: string): CustomIconItem | undefined {
     if (!name) return undefined;
     const clean = String(name).trim().toLowerCase();
-    return this.icons.find((i) => String(i.name).trim().toLowerCase() === clean);
+    const list = this?.icons || [];
+    return list.find((i) => String(i.name).trim().toLowerCase() === clean);
   }
 
   /**
@@ -931,8 +983,8 @@ class CustomIconsManager {
       const StyledComp = createSvgIconComponent(customItem.svg, strVal, { color, size });
       this.registeredComponents.set(strVal, StyledComp);
       this.registeredComponents.set(lowerVal, StyledComp);
-      registerIcon(lowerVal, StyledComp);
-      registerIcon(strVal, StyledComp);
+      safeRegisterIcon(lowerVal, StyledComp);
+      safeRegisterIcon(strVal, StyledComp);
 
       const host = this.detectHostIcon();
       if (host && typeof host.register === 'function') {
@@ -947,7 +999,7 @@ class CustomIconsManager {
     // 多渠道强力获取真实组件，确保绝不落空！
     const baseComp =
       this.registeredComponents.get(lowerBase) ||
-      icons?.get?.(lowerBase) ||
+      getSafeIconsMap()?.get?.(lowerBase) ||
       antdIconsDict.get(lowerBase) ||
       antdIconsDict.get(baseName);
 
@@ -985,8 +1037,8 @@ class CustomIconsManager {
 
     this.registeredComponents.set(strVal, StyledWrapper);
     this.registeredComponents.set(lowerVal, StyledWrapper);
-    registerIcon(lowerVal, StyledWrapper);
-    registerIcon(strVal, StyledWrapper);
+    safeRegisterIcon(lowerVal, StyledWrapper);
+    safeRegisterIcon(strVal, StyledWrapper);
 
     const host = this.detectHostIcon();
     if (host && typeof host.register === 'function') {
@@ -1054,16 +1106,19 @@ class CustomIconsManager {
   }
 
   public getAllIcons(): CustomIconItem[] {
-    return [...this.icons];
+    const list = this?.icons || [];
+    return [...list];
   }
 
   public getCategories(): string[] {
-    return [...this.categories];
+    const cats = this?.categories || ['custom'];
+    return [...cats];
   }
 
   public getIconsByCategory(category: string): CustomIconItem[] {
     if (!category || category === 'all') return this.getAllIcons();
-    return this.icons.filter((item) => (item.category || 'custom') === category);
+    const list = this?.icons || [];
+    return list.filter((item) => (item.category || 'custom') === category);
   }
 
   /**
@@ -1255,6 +1310,65 @@ class CustomIconsManager {
     this.notify();
     return true;
   }
+
+  public getRegisteredComponent(name: string): any {
+    if (!name) return null;
+    const str = String(name).trim();
+    return this.registeredComponents.get(str) || this.registeredComponents.get(str.toLowerCase());
+  }
 }
 
 export const customIconsManager = CustomIconsManager.getInstance();
+
+export function safeHasIcon(name: string): boolean {
+  if (!name) return false;
+  const str = String(name).trim();
+  const lower = str.toLowerCase();
+  if (customIconsManager.getRegisteredComponent(str) || customIconsManager.getIcon(str)) {
+    return true;
+  }
+  const map = getSafeIconsMap();
+  if (map && typeof map.has === 'function') {
+    if (map.has(str) || map.has(lower)) return true;
+  }
+  return antdIconsDict.has(lower) || antdIconsDict.has(str);
+}
+
+export const SafeIcon: React.FC<any> = (props) => {
+  const { type, style, ...rest } = props || {};
+  if (!type) return null;
+
+  const strType = String(type).trim();
+  const lowerType = strType.toLowerCase();
+
+  // 1. 本地已注册的真实组件（支持自定义 SVG 及复合彩色图标）
+  const RegisteredComp = customIconsManager.getRegisteredComponent(strType);
+  if (RegisteredComp) {
+    return React.createElement(RegisteredComp, { style, ...rest });
+  }
+
+  // 2. 宿主探测到的主应用 Icon 组件
+  const HostIcon = customIconsManager.detectHostIcon();
+  if (HostIcon && typeof HostIcon === 'function') {
+    try {
+      return React.createElement(HostIcon, { type: strType, style, ...rest });
+    } catch (e) {}
+  }
+
+  // 3. 全局 icons Map 中注册的组件
+  const map = getSafeIconsMap();
+  const MapComp = map?.get?.(strType) || map?.get?.(lowerType);
+  if (MapComp) {
+    return React.createElement(MapComp, { style, ...rest });
+  }
+
+  // 4. Ant Design 内置图标字典
+  const AntdComp = antdIconsDict.get(lowerType) || antdIconsDict.get(strType) || (AntdIcons as any)[strType];
+  if (AntdComp) {
+    return React.createElement(AntdComp, { style, ...rest });
+  }
+
+  // 5. 兜底样式
+  return React.createElement('span', { className: 'anticon enhanced-safe-icon-fallback', style, ...rest });
+};
+

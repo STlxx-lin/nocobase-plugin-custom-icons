@@ -1051,8 +1051,11 @@ export const createCustomIconReposResource = (app: any, resourceName = 'customIc
 
       try {
         const data = await fetchIconfontCollection(cid);
+        if (!data || typeof data !== 'object') {
+          ctx.throw(404, `未检索到 Iconfont 合辑 (ID: ${cid}) 数据，请确认链接有效或合辑未设为私有`);
+        }
         const collection = data.collection || {};
-        const icons: any[] = data.icons || [];
+        const icons: any[] = Array.isArray(data.icons) ? data.icons : [];
 
         const samples = icons.slice(0, 12).map((icon: any) => ({
           id: icon.id,
@@ -1098,8 +1101,12 @@ export const createCustomIconReposResource = (app: any, resourceName = 'customIc
         ctx.throw(500, `获取 Iconfont 合辑数据失败: ${err.message}`);
       }
 
+      if (!data || typeof data !== 'object') {
+        ctx.throw(404, `未检索到 Iconfont 合辑 (ID: ${cid}) 数据，请确认链接有效或合辑未设为私有`);
+      }
+
       const collection = data.collection || {};
-      const icons: any[] = data.icons || [];
+      const icons: any[] = Array.isArray(data.icons) ? data.icons : [];
       if (icons.length === 0) {
         ctx.throw(400, '该 Iconfont 合辑中未找到任何矢量图标');
       }
