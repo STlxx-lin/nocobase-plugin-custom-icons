@@ -707,12 +707,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 36,
-              height: 36,
+              width: 32,
+              height: 32,
               borderRadius: 6,
               backgroundColor: previewItemBg,
               border: previewItemBorder,
-              fontSize: 20,
+              fontSize: 18,
               color: isInstalled ? '#52c41a' : (isDark ? '#4096ff' : '#1677ff'),
               transition: 'all 0.2s',
             }}
@@ -733,12 +733,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 36,
-                height: 36,
+                width: 32,
+                height: 32,
                 borderRadius: 6,
                 backgroundColor: previewItemBg,
                 border: previewItemBorder,
-                fontSize: 20,
+                fontSize: 18,
                 color: isInstalled ? '#52c41a' : (isDark ? '#4096ff' : '#1677ff'),
                 transition: 'all 0.2s',
               }}
@@ -755,12 +755,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 36,
-              height: 36,
+              width: 32,
+              height: 32,
               borderRadius: 6,
               backgroundColor: badgeBg,
               border: badgeBorder,
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
               color: badgeColor,
             }}
@@ -782,12 +782,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 36,
-                height: 36,
+                width: 32,
+                height: 32,
                 borderRadius: 6,
                 backgroundColor: previewItemBg,
                 border: previewItemBorder,
-                fontSize: 20,
+                fontSize: 18,
                 color: isInstalled ? '#52c41a' : (isDark ? token.colorText : '#262626'),
                 transition: 'all 0.2s',
               }}
@@ -803,12 +803,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 36,
-              height: 36,
+              width: 32,
+              height: 32,
               borderRadius: 6,
               backgroundColor: badgeBg,
               border: badgeBorder,
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
               color: badgeColor,
             }}
@@ -832,14 +832,14 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 36,
-                height: 36,
+                width: 32,
+                height: 32,
                 borderRadius: 6,
                 backgroundColor: previewItemBg,
                 border: isInstalled
                   ? (isDark ? '1px solid rgba(82, 196, 26, 0.5)' : '1px solid #b7eb8f')
                   : (isDark ? '1px solid rgba(255, 68, 0, 0.4)' : '1px solid #ffbb96'),
-                fontSize: 20,
+                fontSize: 18,
                 color: isInstalled ? '#52c41a' : '#ff4400',
                 transition: 'all 0.2s',
               }}
@@ -855,12 +855,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 36,
-              height: 36,
+              width: 32,
+              height: 32,
               borderRadius: 6,
               backgroundColor: isDark ? 'rgba(255, 68, 0, 0.08)' : '#fffaf8',
               border: isDark ? '1px dashed rgba(255, 68, 0, 0.3)' : '1px dashed #ffbb96',
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
               color: isDark ? '#ff7a45' : '#d4380d',
             }}
@@ -881,12 +881,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 36,
-            height: 36,
+            width: 32,
+            height: 32,
             borderRadius: 6,
             backgroundColor: previewItemBg,
             border: previewItemBorder,
-            padding: 6,
+            padding: 5,
             transition: 'all 0.2s',
             position: 'relative',
           }}
@@ -904,7 +904,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               if (parent && !parent.querySelector('.fallback-badge')) {
                 const badge = document.createElement('span');
                 badge.className = 'fallback-badge';
-                badge.style.fontSize = '12px';
+                badge.style.fontSize = '11px';
                 badge.style.fontWeight = '600';
                 badge.style.color = isDark ? 'rgba(255, 255, 255, 0.35)' : '#bfbfbf';
                 badge.innerText = cleanName.slice(0, 2).toUpperCase();
@@ -977,102 +977,65 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
       {/* 自定义 Streamline / Iconmonstr / Iconify / Iconfont 图标集快速导入面板 */}
       <Card
         style={{
-          marginBottom: 20,
+          marginBottom: 16,
           borderRadius: 8,
           background: isDark
             ? 'linear-gradient(135deg, rgba(22, 119, 255, 0.12) 0%, rgba(22, 119, 255, 0.03) 100%)'
             : 'linear-gradient(135deg, #f0f5ff 0%, #fafcff 100%)',
           borderColor: isDark ? 'rgba(22, 119, 255, 0.35)' : '#adc6ff',
         }}
-        bodyStyle={{ padding: 18 }}
+        bodyStyle={{ padding: '12px 16px' }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
-          <Space>
-            <CloudDownloadOutlined style={{ fontSize: 20, color: '#1677ff' }} />
-            <Text strong style={{ fontSize: 15, color: isDark ? (token.colorPrimaryText || '#69b1ff') : '#1d39c4' }}>
-              从 Iconfont、Streamline HQ、Iconmonstr 或 Iconify 平台直接导入任意图标集
-            </Text>
-            <Tag color="blue">实时探测与解析</Tag>
-          </Space>
-          <Space size={12}>
-            <Button
-              type="primary"
-              style={{ backgroundColor: '#ff4400', borderColor: '#ff4400', borderRadius: 4 }}
-              icon={<CloudDownloadOutlined />}
-              onClick={() => setIconfontModalVisible(true)}
-            >
-              从 Iconfont 导入合辑
-            </Button>
-            <Button
-              type="link"
-              size="small"
-              icon={<GlobalOutlined />}
-              href="https://www.iconfont.cn/"
-              target="_blank"
-              style={{ padding: 0, color: '#ff4400' }}
-            >
-              Iconfont 官网
-            </Button>
-            <Button
-              type="link"
-              size="small"
-              icon={<GlobalOutlined />}
-              href="https://www.streamlinehq.com/"
-              target="_blank"
-              style={{ padding: 0 }}
-            >
-              StreamlineHQ 官网
-            </Button>
-            <Button
-              type="link"
-              size="small"
-              icon={<GlobalOutlined />}
-              href="https://iconmonstr.com/"
-              target="_blank"
-              style={{ padding: 0 }}
-            >
-              Iconmonstr 官网
-            </Button>
-            <Button
-              type="link"
-              size="small"
-              icon={<GlobalOutlined />}
-              href="https://icon-sets.iconify.design/"
-              target="_blank"
-              style={{ padding: 0 }}
-            >
-              Iconify 官网
-            </Button>
-          </Space>
-        </div>
-
-        <Row gutter={[12, 12]} align="middle">
-          <Col xs={24} md={18} lg={19}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 320, maxWidth: 680 }}>
             <Input
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value)}
               onPressEnter={handleProbe}
-              placeholder="输入前缀或链接，例如：solar、streamline、粘贴 https://www.iconfont.cn/collections/detail?cid=54546 或 https://iconmonstr.com/"
+              placeholder="输入前缀或链接：例如 solar、streamline、Iconfont 链接或 iconmonstr.com"
               allowClear
-              prefix={<CompassOutlined style={{ color: '#bfbfbf' }} />}
-              size="large"
+              prefix={<CompassOutlined style={{ color: '#8c8c8c' }} />}
               style={{ borderRadius: 6 }}
             />
-          </Col>
-          <Col xs={24} md={6} lg={5}>
             <Button
               type="primary"
               icon={probing ? <SyncOutlined spin /> : <SearchOutlined />}
               onClick={handleProbe}
               loading={probing}
-              size="large"
-              block
-              style={{ borderRadius: 6 }}
+              style={{ borderRadius: 6, flexShrink: 0 }}
             >
-              探测图标集
+              探测并导入
             </Button>
-          </Col>
-        </Row>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <Button
+              type="primary"
+              style={{ backgroundColor: '#ff4400', borderColor: '#ff4400', borderRadius: 6 }}
+              icon={<CloudDownloadOutlined />}
+              onClick={() => setIconfontModalVisible(true)}
+            >
+              从 Iconfont 导入合辑
+            </Button>
+            <Space size={8} style={{ fontSize: 13 }}>
+              <a href="https://www.iconfont.cn/" target="_blank" rel="noreferrer" style={{ color: '#ff4400', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <GlobalOutlined /> Iconfont
+              </a>
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <a href="https://www.streamlinehq.com/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <GlobalOutlined /> Streamline
+              </a>
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <a href="https://iconmonstr.com/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <GlobalOutlined /> Iconmonstr
+              </a>
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <a href="https://icon-sets.iconify.design/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <GlobalOutlined /> Iconify
+              </a>
+            </Space>
+          </div>
+        </div>
 
         {/* 探测成功后展示的集合预览卡片 */}
         {probeResult && (
@@ -1267,7 +1230,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
             const isOperating = operatingKey === repo.key;
 
             return (
-              <Col xs={24} sm={24} md={12} lg={12} key={repo.key}>
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={6} key={repo.key}>
                 <Card
                   hoverable
                   style={{
@@ -1281,7 +1244,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                     boxShadow: isInstalled ? '0 2px 8px rgba(82, 196, 26, 0.12)' : undefined,
                     transition: 'all 0.3s',
                   }}
-                  bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 20 }}
+                  bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px 16px 14px' }}
                 >
                   <div
                     style={{
@@ -1358,9 +1321,9 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                   <div
                     style={{
                       backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : '#fafafa',
-                      padding: '12px 14px',
+                      padding: '10px 12px',
                       borderRadius: 6,
-                      marginBottom: 16,
+                      marginBottom: 14,
                       border: '1px dashed ' + (isDark ? 'rgba(255, 255, 255, 0.15)' : '#e8e8e8'),
                     }}
                   >
@@ -1399,12 +1362,13 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                                   marginBottom: 8,
                                   display: 'flex',
                                   justifyContent: 'space-between',
+                                fontFamily: 'inherit',
                                 }}
                               >
                                 <span>典型图标展示：</span>
                                 <span style={{ color: '#52c41a' }}>已入库 (显示前 {topN.length} 个)</span>
                               </div>
-                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                                 {topN.map((localIcon) => (
                                   <Tooltip
                                     title={localIcon.title ? `${localIcon.title} (${localIcon.name})` : localIcon.name}
@@ -1415,12 +1379,12 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                                         display: 'inline-flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        width: 36,
-                                        height: 36,
+                                        width: 32,
+                                        height: 32,
                                         borderRadius: 6,
                                         backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : '#fff',
                                         border: isDark ? '1px solid rgba(82, 196, 26, 0.5)' : '1px solid #b7eb8f',
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         color: '#52c41a',
                                         transition: 'all 0.2s',
                                       }}
@@ -1450,7 +1414,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                             <span>典型图标展示：</span>
                             <span>{isInstalled ? '本地已加载' : '官方在线实时预览'}</span>
                           </div>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                             {previewList.length > 0 ? (
                               previewList.map((iconName) =>
                                 renderSinglePreview(
