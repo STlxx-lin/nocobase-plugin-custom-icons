@@ -10,6 +10,7 @@ import {
   Card,
   Typography,
   Alert,
+  theme,
 } from 'antd';
 import { customIconsManager, CustomIconItem } from '../services/custom-icons-manager';
 import { sanitizeAndFormatSvg } from '../utils/svg-helper';
@@ -32,6 +33,7 @@ export const EditIconModal: React.FC<EditIconModalProps> = ({
   icon,
   apiClient,
 }) => {
+  const { token } = theme.useToken();
   const [form] = Form.useForm();
   const [svgInput, setSvgInput] = useState('');
   const [categories, setCategories] = useState<string[]>(['custom']);
@@ -177,11 +179,18 @@ export const EditIconModal: React.FC<EditIconModalProps> = ({
           />
         </Form.Item>
 
-        <Card size="small" title="实时效果预览" style={{ background: '#fafafa' }}>
+        <Card
+          size="small"
+          title="实时效果预览"
+          style={{
+            background: token.colorFillAlter,
+            border: `1px solid ${token.colorBorderSecondary}`,
+          }}
+        >
           {previewError ? (
             <Alert message="SVG 代码有误" description={previewError} type="warning" showIcon />
           ) : sanitizedPreviewSvg ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '8px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '8px 0', flexWrap: 'wrap' }}>
               <div>
                 <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
                   小尺寸 (16px)
@@ -193,9 +202,9 @@ export const EditIconModal: React.FC<EditIconModalProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '1px dashed #d9d9d9',
+                    border: `1px dashed ${token.colorBorderSecondary}`,
                     borderRadius: 4,
-                    background: '#fff',
+                    background: token.colorBgContainer,
                     fontSize: 16,
                   }}
                   dangerouslySetInnerHTML={{ __html: sanitizedPreviewSvg }}
@@ -213,9 +222,9 @@ export const EditIconModal: React.FC<EditIconModalProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '1px dashed #d9d9d9',
+                    border: `1px dashed ${token.colorBorderSecondary}`,
                     borderRadius: 4,
-                    background: '#fff',
+                    background: token.colorBgContainer,
                     fontSize: 24,
                   }}
                   dangerouslySetInnerHTML={{ __html: sanitizedPreviewSvg }}
@@ -233,9 +242,9 @@ export const EditIconModal: React.FC<EditIconModalProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '1px dashed #d9d9d9',
+                    border: `1px dashed ${token.colorBorderSecondary}`,
                     borderRadius: 4,
-                    background: '#fff',
+                    background: token.colorBgContainer,
                     fontSize: 36,
                   }}
                   dangerouslySetInnerHTML={{ __html: sanitizedPreviewSvg }}

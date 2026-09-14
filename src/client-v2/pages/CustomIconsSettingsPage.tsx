@@ -445,7 +445,7 @@ export const CustomIconsSettingsPage: React.FC<{ api: any }> = ({ api }) => {
                       style={{
                         marginTop: 24,
                         paddingTop: 16,
-                        borderTop: '1px solid #f0f0f0',
+                        borderTop: `1px solid ${token.colorBorderSecondary}`,
                         display: 'flex',
                         justifyContent: 'flex-end',
                         gap: 12,

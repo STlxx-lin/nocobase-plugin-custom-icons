@@ -16,6 +16,7 @@ import {
   Popconfirm,
   Tag,
   Alert,
+  theme,
 } from 'antd';
 import {
   InboxOutlined,
@@ -48,6 +49,7 @@ export const CustomIconModal: React.FC<CustomIconModalProps> = ({
   onSuccess,
   apiClient,
 }) => {
+  const { token } = theme.useToken();
   const [activeTab, setActiveTab] = useState('single');
   const [form] = Form.useForm();
   const [svgInput, setSvgInput] = useState('');
@@ -376,7 +378,11 @@ export const CustomIconModal: React.FC<CustomIconModalProps> = ({
                     <Card
                       size="small"
                       title="实时渲染效果预览"
-                      style={{ marginBottom: 16, backgroundColor: '#fafafa' }}
+                      style={{
+                        marginBottom: 16,
+                        backgroundColor: token.colorFillAlter,
+                        border: `1px solid ${token.colorBorderSecondary}`,
+                      }}
                     >
                       <Space size="large" align="center">
                         <div style={{ textAlign: 'center' }}>
@@ -384,7 +390,7 @@ export const CustomIconModal: React.FC<CustomIconModalProps> = ({
                             style={{
                               fontSize: 16,
                               padding: 8,
-                              border: '1px dashed #d9d9d9',
+                              border: `1px dashed ${token.colorBorderSecondary}`,
                               borderRadius: 4,
                               display: 'inline-flex',
                             }}
@@ -399,13 +405,13 @@ export const CustomIconModal: React.FC<CustomIconModalProps> = ({
                               fontSize: 24,
                               color: '#1677ff',
                               padding: 8,
-                              border: '1px dashed #d9d9d9',
+                              border: `1px dashed ${token.colorBorderSecondary}`,
                               borderRadius: 4,
                               display: 'inline-flex',
                             }}
                             dangerouslySetInnerHTML={{ __html: sanitizedPreviewSvg }}
                           />
-                          <div style={{ fontSize: 12, color: '#8c8c8c', marginTop: 4 }}>24px (高亮主色)</div>
+                          <div style={{ fontSize: 12, color: token.colorTextTertiary, marginTop: 4 }}>24px (高亮主色)</div>
                         </div>
 
                         <div style={{ textAlign: 'center' }}>
@@ -414,13 +420,13 @@ export const CustomIconModal: React.FC<CustomIconModalProps> = ({
                               fontSize: 32,
                               color: '#52c41a',
                               padding: 8,
-                              border: '1px dashed #d9d9d9',
+                              border: `1px dashed ${token.colorBorderSecondary}`,
                               borderRadius: 4,
                               display: 'inline-flex',
                             }}
                             dangerouslySetInnerHTML={{ __html: sanitizedPreviewSvg }}
                           />
-                          <div style={{ fontSize: 12, color: '#8c8c8c', marginTop: 4 }}>32px (大图标)</div>
+                          <div style={{ fontSize: 12, color: token.colorTextTertiary, marginTop: 4 }}>32px (大图标)</div>
                         </div>
                       </Space>
                     </Card>

@@ -163,7 +163,8 @@ export const BUILTIN_SUB_CATEGORIES: SubCategoryDef[] = customIconsManager.getSu
 export const UNIVERSAL_ICONIFY_SUB_CATEGORIES: SubCategoryDef[] = customIconsManager.getSubCategories('universal');
 
 function EnhancedIconField(props: IconPickerProps) {
-  const { fontSizeXL } = theme.useToken().token;
+  const { token } = theme.useToken();
+  const { fontSizeXL } = token;
   const layout = safeUseFormLayout();
   const {
     value,
@@ -487,14 +488,14 @@ function EnhancedIconField(props: IconPickerProps) {
               style={{
                 flexShrink: 0,
                 padding: '6px 4px 2px',
-                borderTop: '1px solid #f0f0f0',
-                backgroundColor: '#fafafa',
+                borderTop: `1px solid ${token.colorBorderSecondary}`,
+                backgroundColor: token.colorFillAlter,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
-              <span style={{ fontSize: 11, color: '#8c8c8c' }}>
+              <span style={{ fontSize: 11, color: token.colorTextTertiary }}>
                 共 {totalCustom} 款 · 每页 {pageSize} 款
               </span>
               <Pagination
@@ -588,14 +589,14 @@ function EnhancedIconField(props: IconPickerProps) {
               style={{
                 flexShrink: 0,
                 padding: '6px 4px 2px',
-                borderTop: '1px solid #f0f0f0',
-                backgroundColor: '#fafafa',
+                borderTop: `1px solid ${token.colorBorderSecondary}`,
+                backgroundColor: token.colorFillAlter,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
-              <span style={{ fontSize: 11, color: '#8c8c8c' }}>
+              <span style={{ fontSize: 11, color: token.colorTextTertiary }}>
                 共 {totalCount} 款 · 每页 {pageSize} 款
               </span>
               <Pagination
@@ -669,14 +670,14 @@ function EnhancedIconField(props: IconPickerProps) {
             style={{
               flexShrink: 0,
               padding: '6px 4px 2px',
-              borderTop: '1px solid #f0f0f0',
-              backgroundColor: '#fafafa',
+              borderTop: `1px solid ${token.colorBorderSecondary}`,
+              backgroundColor: token.colorFillAlter,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
-            <span style={{ fontSize: 11, color: '#8c8c8c' }}>
+            <span style={{ fontSize: 11, color: token.colorTextTertiary }}>
               共 {totalBuiltIn} 款 · 每页 {pageSize} 款
             </span>
             <Pagination
@@ -801,7 +802,7 @@ function EnhancedIconField(props: IconPickerProps) {
                     width: 96,
                     height: '100%',
                     overflowY: 'auto',
-                    borderLeft: '1px solid #f0f0f0',
+                    borderLeft: `1px solid ${token.colorBorderSecondary}`,
                     padding: '2px 0 2px 6px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -812,10 +813,10 @@ function EnhancedIconField(props: IconPickerProps) {
                   <div
                     style={{
                       fontSize: 11,
-                      color: '#8c8c8c',
+                      color: token.colorTextTertiary,
                       padding: '2px 4px 4px',
                       fontWeight: 600,
-                      borderBottom: '1px dashed #f0f0f0',
+                      borderBottom: `1px dashed ${token.colorBorderSecondary}`,
                       marginBottom: 2,
                     }}
                   >
@@ -835,14 +836,14 @@ function EnhancedIconField(props: IconPickerProps) {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          backgroundColor: isActive ? '#e6f4ff' : 'transparent',
-                          color: isActive ? '#1677ff' : '#595959',
+                          backgroundColor: isActive ? (token.colorPrimaryBg || 'rgba(22, 119, 255, 0.15)') : 'transparent',
+                          color: isActive ? token.colorPrimary : token.colorTextSecondary,
                           fontWeight: isActive ? 600 : 400,
                           transition: 'all 0.15s ease',
                           userSelect: 'none',
                         }}
                         onMouseEnter={(e) => {
-                          if (!isActive) e.currentTarget.style.backgroundColor = '#f5f5f5';
+                          if (!isActive) e.currentTarget.style.backgroundColor = token.colorFillSecondary;
                         }}
                         onMouseLeave={(e) => {
                           if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';

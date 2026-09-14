@@ -19,6 +19,7 @@ import {
   Modal,
   Progress,
   InputNumber,
+  theme,
 } from 'antd';
 import {
   DownloadOutlined,
@@ -117,6 +118,23 @@ interface IconRepoMarketProps {
 }
 
 export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRepoChanged }) => {
+  const { token } = theme.useToken();
+  const isDark = useMemo(() => {
+    if (token.colorBgContainer === '#141414' || token.colorBgBase === '#000' || token.colorBgBase === '#000000') return true;
+    const bg = token.colorBgContainer || '#ffffff';
+    if (bg.startsWith('#') && (bg.length === 7 || bg.length === 4)) {
+      const hex = bg.length === 4
+        ? bg.slice(1).split('').map((c) => c + c).join('')
+        : bg.slice(1);
+      const r = parseInt(hex.substring(0, 2), 16) || 0;
+      const g = parseInt(hex.substring(2, 4), 16) || 0;
+      const b = parseInt(hex.substring(4, 6), 16) || 0;
+      const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+      return yiq < 128;
+    }
+    return false;
+  }, [token.colorBgContainer, token.colorBgBase]);
+
   const [repos, setRepos] = useState<IconRepoItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [operatingKey, setOperatingKey] = useState<string | null>(null);
@@ -668,6 +686,14 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
     const cleanName = iconName.includes(':') ? iconName.split(':')[1] : iconName;
     const fullName = `${prefix}:${cleanName}`;
 
+    const previewItemBg = isDark ? 'rgba(255, 255, 255, 0.06)' : '#fff';
+    const previewItemBorder = isInstalled
+      ? (isDark ? '1px solid rgba(82, 196, 26, 0.5)' : '1px solid #b7eb8f')
+      : (isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #e8e8e8');
+    const badgeBg = isDark ? 'rgba(255, 255, 255, 0.04)' : '#fafafa';
+    const badgeBorder = isDark ? '1px dashed rgba(255, 255, 255, 0.15)' : '1px dashed #d9d9d9';
+    const badgeColor = isDark ? token.colorTextTertiary : '#8c8c8c';
+
     // 1. 本地已安装图标优先（无论来自草莓还是 Iconify）
     const localIcon = customIconsManager
       .getAllIcons()
@@ -684,10 +710,10 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               width: 36,
               height: 36,
               borderRadius: 6,
-              backgroundColor: '#fff',
-              border: isInstalled ? '1px solid #b7eb8f' : '1px solid #e8e8e8',
+              backgroundColor: previewItemBg,
+              border: previewItemBorder,
               fontSize: 20,
-              color: isInstalled ? '#52c41a' : '#1677ff',
+              color: isInstalled ? '#52c41a' : (isDark ? '#4096ff' : '#1677ff'),
               transition: 'all 0.2s',
             }}
             dangerouslySetInnerHTML={{ __html: sanitizeAndFormatSvg(localIcon.svg) }}
@@ -710,10 +736,10 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 width: 36,
                 height: 36,
                 borderRadius: 6,
-                backgroundColor: '#fff',
-                border: isInstalled ? '1px solid #b7eb8f' : '1px solid #e8e8e8',
+                backgroundColor: previewItemBg,
+                border: previewItemBorder,
                 fontSize: 20,
-                color: isInstalled ? '#52c41a' : '#1677ff',
+                color: isInstalled ? '#52c41a' : (isDark ? '#4096ff' : '#1677ff'),
                 transition: 'all 0.2s',
               }}
               dangerouslySetInnerHTML={{ __html: sanitizeAndFormatSvg(localSvg) }}
@@ -732,11 +758,11 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               width: 36,
               height: 36,
               borderRadius: 6,
-              backgroundColor: '#fafafa',
-              border: '1px dashed #d9d9d9',
+              backgroundColor: badgeBg,
+              border: badgeBorder,
               fontSize: 12,
               fontWeight: 600,
-              color: '#8c8c8c',
+              color: badgeColor,
             }}
           >
             {cleanName.slice(0, 2).toUpperCase()}
@@ -759,10 +785,10 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 width: 36,
                 height: 36,
                 borderRadius: 6,
-                backgroundColor: '#fff',
-                border: isInstalled ? '1px solid #b7eb8f' : '1px solid #e8e8e8',
+                backgroundColor: previewItemBg,
+                border: previewItemBorder,
                 fontSize: 20,
-                color: isInstalled ? '#52c41a' : '#262626',
+                color: isInstalled ? '#52c41a' : (isDark ? token.colorText : '#262626'),
                 transition: 'all 0.2s',
               }}
               dangerouslySetInnerHTML={{ __html: sanitizeAndFormatSvg(localSvg) }}
@@ -780,11 +806,11 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               width: 36,
               height: 36,
               borderRadius: 6,
-              backgroundColor: '#fafafa',
-              border: '1px dashed #d9d9d9',
+              backgroundColor: badgeBg,
+              border: badgeBorder,
               fontSize: 12,
               fontWeight: 600,
-              color: '#595959',
+              color: badgeColor,
             }}
           >
             {cleanName.slice(0, 2).toUpperCase()}
@@ -809,8 +835,10 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 width: 36,
                 height: 36,
                 borderRadius: 6,
-                backgroundColor: '#fff',
-                border: isInstalled ? '1px solid #b7eb8f' : '1px solid #ffbb96',
+                backgroundColor: previewItemBg,
+                border: isInstalled
+                  ? (isDark ? '1px solid rgba(82, 196, 26, 0.5)' : '1px solid #b7eb8f')
+                  : (isDark ? '1px solid rgba(255, 68, 0, 0.4)' : '1px solid #ffbb96'),
                 fontSize: 20,
                 color: isInstalled ? '#52c41a' : '#ff4400',
                 transition: 'all 0.2s',
@@ -830,11 +858,11 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               width: 36,
               height: 36,
               borderRadius: 6,
-              backgroundColor: '#fffaf8',
-              border: '1px dashed #ffbb96',
+              backgroundColor: isDark ? 'rgba(255, 68, 0, 0.08)' : '#fffaf8',
+              border: isDark ? '1px dashed rgba(255, 68, 0, 0.3)' : '1px dashed #ffbb96',
               fontSize: 12,
               fontWeight: 600,
-              color: '#d4380d',
+              color: isDark ? '#ff7a45' : '#d4380d',
             }}
           >
             {cleanName.slice(0, 2).toUpperCase()}
@@ -844,7 +872,8 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
     }
 
     // 4. Iconify 官方在线实时 SVG 图（带错误自动兜底防裂图）
-    const onlineSvgUrl = `https://api.iconify.design/${prefix}/${cleanName}.svg?color=%231677ff`;
+    const onlineColor = isDark ? '%234096ff' : '%231677ff';
+    const onlineSvgUrl = `https://api.iconify.design/${prefix}/${cleanName}.svg?color=${onlineColor}`;
     return (
       <Tooltip title={fullName} key={iconName}>
         <div
@@ -855,8 +884,8 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
             width: 36,
             height: 36,
             borderRadius: 6,
-            backgroundColor: '#fff',
-            border: isInstalled ? '1px solid #b7eb8f' : '1px solid #e8e8e8',
+            backgroundColor: previewItemBg,
+            border: previewItemBorder,
             padding: 6,
             transition: 'all 0.2s',
             position: 'relative',
@@ -877,7 +906,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 badge.className = 'fallback-badge';
                 badge.style.fontSize = '12px';
                 badge.style.fontWeight = '600';
-                badge.style.color = '#bfbfbf';
+                badge.style.color = isDark ? 'rgba(255, 255, 255, 0.35)' : '#bfbfbf';
                 badge.innerText = cleanName.slice(0, 2).toUpperCase();
                 parent.appendChild(badge);
               }
@@ -950,15 +979,17 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
         style={{
           marginBottom: 20,
           borderRadius: 8,
-          background: 'linear-gradient(135deg, #f0f5ff 0%, #fafcff 100%)',
-          borderColor: '#adc6ff',
+          background: isDark
+            ? 'linear-gradient(135deg, rgba(22, 119, 255, 0.12) 0%, rgba(22, 119, 255, 0.03) 100%)'
+            : 'linear-gradient(135deg, #f0f5ff 0%, #fafcff 100%)',
+          borderColor: isDark ? 'rgba(22, 119, 255, 0.35)' : '#adc6ff',
         }}
         bodyStyle={{ padding: 18 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
           <Space>
             <CloudDownloadOutlined style={{ fontSize: 20, color: '#1677ff' }} />
-            <Text strong style={{ fontSize: 15, color: '#1d39c4' }}>
+            <Text strong style={{ fontSize: 15, color: isDark ? (token.colorPrimaryText || '#69b1ff') : '#1d39c4' }}>
               从 Iconfont、Streamline HQ、Iconmonstr 或 Iconify 平台直接导入任意图标集
             </Text>
             <Tag color="blue">实时探测与解析</Tag>
@@ -1049,15 +1080,17 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
             style={{
               marginTop: 16,
               borderRadius: 6,
-              backgroundColor: '#fff',
-              borderColor: probeResult.sourcePlatform === 'iconfont' ? '#ffbb96' : '#69b1ff',
-              boxShadow: '0 2px 8px rgba(22, 119, 255, 0.08)',
+              backgroundColor: token.colorBgContainer,
+              borderColor: probeResult.sourcePlatform === 'iconfont'
+                ? (isDark ? 'rgba(255, 68, 0, 0.4)' : '#ffbb96')
+                : (isDark ? 'rgba(22, 119, 255, 0.4)' : '#69b1ff'),
+              boxShadow: isDark ? '0 2px 8px rgba(0, 0, 0, 0.45)' : '0 2px 8px rgba(22, 119, 255, 0.08)',
             }}
             bodyStyle={{ padding: 16 }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
               <div>
-                <Title level={5} style={{ margin: 0, color: probeResult.sourcePlatform === 'iconfont' ? '#d4380d' : '#1677ff' }}>
+                <Title level={5} style={{ margin: 0, color: probeResult.sourcePlatform === 'iconfont' ? (isDark ? '#ff7a45' : '#d4380d') : (isDark ? '#4096ff' : '#1677ff') }}>
                   {probeResult.title} ({probeResult.prefix})
                 </Title>
                 <Space size={8} style={{ marginTop: 6, flexWrap: 'wrap' }}>
@@ -1119,11 +1152,15 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                 marginTop: 14,
                 padding: '10px 14px',
                 borderRadius: 6,
-                backgroundColor: probeResult.sourcePlatform === 'iconfont' ? '#fffaf8' : '#f8faff',
-                border: '1px solid ' + (probeResult.sourcePlatform === 'iconfont' ? '#ffd8bf' : '#d6e4ff'),
+                backgroundColor: isDark
+                  ? (probeResult.sourcePlatform === 'iconfont' ? 'rgba(255, 68, 0, 0.08)' : 'rgba(22, 119, 255, 0.08)')
+                  : (probeResult.sourcePlatform === 'iconfont' ? '#fffaf8' : '#f8faff'),
+                border: '1px solid ' + (isDark
+                  ? (probeResult.sourcePlatform === 'iconfont' ? 'rgba(255, 68, 0, 0.3)' : 'rgba(22, 119, 255, 0.3)')
+                  : (probeResult.sourcePlatform === 'iconfont' ? '#ffd8bf' : '#d6e4ff')),
               }}
             >
-              <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 8, color: '#262626' }}>
+              <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 8, color: isDark ? token.colorText : '#262626' }}>
                 <SettingOutlined style={{ marginRight: 6 }} />自定义入库配置（可在此自由修改标题与分类）：
               </Text>
               <Row gutter={[12, 8]}>
@@ -1238,7 +1275,9 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: 8,
-                    borderColor: isInstalled ? '#b7eb8f' : '#e8e8e8',
+                    borderColor: isInstalled
+                      ? (isDark ? 'rgba(82, 196, 26, 0.6)' : '#b7eb8f')
+                      : (isDark ? 'rgba(255, 255, 255, 0.12)' : '#e8e8e8'),
                     boxShadow: isInstalled ? '0 2px 8px rgba(82, 196, 26, 0.12)' : undefined,
                     transition: 'all 0.3s',
                   }}
@@ -1318,11 +1357,11 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                   {/* 图标展示区 */}
                   <div
                     style={{
-                      backgroundColor: '#fafafa',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : '#fafafa',
                       padding: '12px 14px',
                       borderRadius: 6,
                       marginBottom: 16,
-                      border: '1px dashed #e8e8e8',
+                      border: '1px dashed ' + (isDark ? 'rgba(255, 255, 255, 0.15)' : '#e8e8e8'),
                     }}
                   >
                     {(() => {
@@ -1356,7 +1395,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                               <div
                                 style={{
                                   fontSize: 12,
-                                  color: '#8c8c8c',
+                                  color: isDark ? token.colorTextTertiary : '#8c8c8c',
                                   marginBottom: 8,
                                   display: 'flex',
                                   justifyContent: 'space-between',
@@ -1379,8 +1418,8 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                                         width: 36,
                                         height: 36,
                                         borderRadius: 6,
-                                        backgroundColor: '#fff',
-                                        border: '1px solid #b7eb8f',
+                                        backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : '#fff',
+                                        border: isDark ? '1px solid rgba(82, 196, 26, 0.5)' : '1px solid #b7eb8f',
                                         fontSize: 20,
                                         color: '#52c41a',
                                         transition: 'all 0.2s',
@@ -1402,7 +1441,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                           <div
                             style={{
                               fontSize: 12,
-                              color: '#8c8c8c',
+                              color: isDark ? token.colorTextTertiary : '#8c8c8c',
                               marginBottom: 8,
                               display: 'flex',
                               justifyContent: 'space-between',
@@ -1422,7 +1461,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                                 ),
                               )
                             ) : (
-                              <div style={{ fontSize: 12, color: '#bfbfbf', padding: '6px 0' }}>
+                              <div style={{ fontSize: 12, color: isDark ? token.colorTextQuaternary : '#bfbfbf', padding: '6px 0' }}>
                                 {isInstalled ? '暂无图标预览' : '未提供预览'}
                               </div>
                             )}
@@ -1440,7 +1479,7 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                       justifyContent: 'space-between',
                       alignItems: 'center',
                       paddingTop: 12,
-                      borderTop: '1px solid #f0f0f0',
+                      borderTop: '1px solid ' + (isDark ? 'rgba(255, 255, 255, 0.08)' : '#f0f0f0'),
                     }}
                   >
                     <Button
@@ -1572,11 +1611,11 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
           {/* 页码与预设档位 */}
           <div
             style={{
-              background: '#fafafa',
+              background: isDark ? 'rgba(255, 255, 255, 0.04)' : '#fafafa',
               padding: 16,
               borderRadius: 8,
               marginBottom: 16,
-              border: '1px solid #f0f0f0',
+              border: '1px solid ' + (isDark ? 'rgba(255, 255, 255, 0.08)' : '#f0f0f0'),
             }}
           >
             <div
@@ -1798,13 +1837,13 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
               size="small"
               style={{
                 marginBottom: 16,
-                borderColor: '#ffbb96',
-                background: '#fffaf8',
+                borderColor: isDark ? 'rgba(255, 68, 0, 0.4)' : '#ffbb96',
+                background: isDark ? 'rgba(255, 68, 0, 0.08)' : '#fffaf8',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
                 <div>
-                  <Title level={5} style={{ margin: 0, color: '#d4380d' }}>
+                  <Title level={5} style={{ margin: 0, color: isDark ? '#ff7a45' : '#d4380d' }}>
                     {iconfontProbeData.title}
                   </Title>
                   <Text type="secondary" style={{ fontSize: 13, display: 'block', marginTop: 4 }}>
@@ -1831,11 +1870,11 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                   marginTop: 14,
                   padding: '12px 14px',
                   borderRadius: 6,
-                  backgroundColor: '#fff',
-                  border: '1px solid #ffd8bf',
+                  backgroundColor: isDark ? token.colorBgContainer : '#fff',
+                  border: '1px solid ' + (isDark ? 'rgba(255, 68, 0, 0.3)' : '#ffd8bf'),
                 }}
               >
-                <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 10, color: '#d4380d' }}>
+                <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 10, color: isDark ? '#ff7a45' : '#d4380d' }}>
                   <SettingOutlined style={{ marginRight: 6 }} />入库自定义配置（可自由修改标题、分类与描述）：
                 </Text>
                 <Row gutter={[16, 12]}>
@@ -1892,8 +1931,8 @@ export const IconRepoMarket: React.FC<IconRepoMarketProps> = ({ apiClient, onRep
                             width: 36,
                             height: 36,
                             borderRadius: 6,
-                            backgroundColor: '#fff',
-                            border: '1px solid #e8e8e8',
+                            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : '#fff',
+                            border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #e8e8e8',
                             fontSize: 20,
                             padding: 4,
                           }}

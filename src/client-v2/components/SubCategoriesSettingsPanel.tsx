@@ -637,7 +637,6 @@ export const SubCategoriesSettingsPanel: React.FC<SubCategoriesSettingsPanelProp
                 fontFamily: 'Consolas, Monaco, "Courier New", monospace',
                 fontSize: 13,
                 lineHeight: 1.5,
-                backgroundColor: '#fafafa',
               }}
             />
             <div
