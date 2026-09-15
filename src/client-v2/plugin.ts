@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plugin } from '@nocobase/client';
+import { Plugin } from '@nocobase/client-v2';
 import { customIconsManager } from './services/custom-icons-manager';
 import { EnhancedIconPicker } from './components/EnhancedIconPicker';
 import { CustomIconsSettingsPage } from './pages/CustomIconsSettingsPage';

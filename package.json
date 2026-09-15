@@ -4,7 +4,7 @@
   "displayName.zh-CN": "自定义图标库与SVG扩展",
   "description": "Custom SVG icons, external icon libraries import, and seamless integration with NocoBase IconPicker.",
   "description.zh-CN": "自定义SVG图标扩展、第三方图标库导入与原生图标选择器无缝集成增强。",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "homepage": "https://github.com/STlxx-lin/nocobase-plugin-custom-icons",
   "homepage.zh-CN": "https://github.com/STlxx-lin/nocobase-plugin-custom-icons",
   "scripts": {
